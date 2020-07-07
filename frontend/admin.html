@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аренда книг</title>
+</head>
+<body>
+    <h1>Панель администратора</h1>
+    <form action="" method="post">
+        <label>Название книги: <input type="text" name="title" required></label>
+        <label for="genre">Страна: </label>
+        <select name="genre">
+            <option value="Ужасы">Ужасы</option>
+            <option value="Детская литература">Детская литература</option> 
+            <option value="Манга">Манга</option> 
+            <option value="Литература на иностранном языке">Литература на иностранном языке</option>
+            <option value="Словари">Словари</option> 
+          </select>
+          <button type="submit">Сохранить</button>  
+    </form>
+
+    <ul class="books-list">
+        <li>
+            <div class="book-title">Окулус</div>
+            <div class="book-genre">Ужасы</div>
+            <button class="add-to-cart">Удалить</button>
+        </li>
+        <li>
+            <div class="book-title">Дракула</div>
+            <div class="book-genre">Ужасы</div>
+            <button class="add-to-cart">Удалить</button>
+        </li>
+    </ul>
+</body>
+</html>
