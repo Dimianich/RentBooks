@@ -22,7 +22,7 @@ public class BookController {
     public ResponseEntity<List<Book>> read() {
         final List<Book> books = listBookService.getAll();
 
-        return books != null &&  !books.isEmpty()
+        return (books != null && !books.isEmpty())
                 ? new ResponseEntity<>(books, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
