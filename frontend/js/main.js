@@ -1,10 +1,16 @@
 
 const booksList = document.querySelector(".books-list");
+const buttonSendOrder = document.querySelector(".button-send-order");
+const buttonChekDiscount = document.querySelector(".button-chek-discount");
+const card = document.querySelector(".card");
+const responseText = document.querySelector(".response-text");
 
-let books = [];
-const url = "http://localhost:8080/api/books";
+let order = [];
 
-/*const getData = async function(url) {
+const urlGet = "http://localhost:8080/api/books";
+const urlPost = "http://localhost:8080/api/order";
+
+async function getData(url) {
   const response = await fetch(url);
 
   if(!response.ok){
@@ -14,108 +20,104 @@ const url = "http://localhost:8080/api/books";
   return await response.json();
 };
 
-*/
-
-
-fetch(url)
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    console.log(data);
-    //data.forEach(function(item) {
-    //  console.log(item);
-    //});
-    //console.log(data.book[0].author);
-    //books = data.book;
-    console.log(data);
-    createBookList(data);
-    
-/*
-    data.book.forEach(function(item){
-      const book = `<li id="${item.id}">
-        <div class="book-title">${item.title}</div>
-        <div class="book-genre">${item.genre}</div>
-        <div class="book-author">${item.author}</div>
-        <button class="add-to-cart">Добавить</button>
-        </li>`;
-      
-        console.log(book);
-    
-      booksList.insertAdjacentHTML('beforeend', book);
-    });
-
-*/
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-/*
-let response = await fetch(url);
-
-if (response.ok) { // если HTTP-статус в диапазоне 200-299
-  // получаем тело ответа (см. про этот метод ниже)
-  let json = await response.json();
-} else {
-  alert("Ошибка HTTP: " + response.status);
-}
-*/
-
-/*
-const url = 'https://example.com/profile';
-const data = { username: 'example' };
-
-try {
+async function postData(url, data) {
   const response = await fetch(url, {
-    method: 'POST', // или 'PUT'
-    body: JSON.stringify(data), // данные могут быть 'строкой' или {объектом}!
+    method: 'POST', 
     headers: {
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(data) 
   });
-  const json = await response.json();
-  console.log('Успех:', JSON.stringify(json));
-} catch (error) {
-  console.error('Ошибка:', error);
+  
+  if(!response.ok){
+    throw new Error(`Ошибка по адресу ${url}, статус ошибки ${response.status}`);
+  }
+  
+  return await response.text(); 
 }
-*/
-
-
 
 
 function createBookList(books){
 
-/*
-  books.forEach(function(item) {
-  console.log(item);
-});
-*/
-
-
   books.forEach(function(item){
-    const book = `<li id="${item.id}">
-      <div class="book-title">${item.title}</div>
-      <div class="book-genre">${item.genre}</div>
-      <button class="add-to-cart">Добавить</button>
-      </li>`;
+    const book = `<tr id="${item.id}"> 
+      <td class="book-title">${item.title}</td>
+      <td class="book-genre">${item.genre}</td>
+      <td><button class="add-to-order">Добавить</button></td>
+      </tr>`;
     
-      console.log(book);
-  
+        
     booksList.insertAdjacentHTML('beforeend', book);
+
   });
+
+  let buttons = document.querySelectorAll(".add-to-order");
+  buttons.forEach((elem)=>{
+    elem.addEventListener('click', addToOrder);
+  })
 
 }
 
-/*
+function addToOrder(event){
+  const target = event.target;
+  const parent = target.parentElement.parentElement;
+  const id = parent.id;
+  const title = parent.querySelector(".book-title").textContent;
+  const genre = parent.querySelector(".book-genre").textContent;
+  if (target.classList.contains("active")){
+    for (let i = 0; i < order.length; i++) {
+      if (order[i].id == id){
+        order.splice(i, 1); 
+      }
+    }
+    target.innerText = "Добавить";
+  }else{
+    let book = {
+      id: id,
+      title: title,
+      genre: genre
+    };
+    order.push(book);
+    target.innerText = "Убрать";
+  }
+ 
+    target.classList.toggle("active");
+  }
+
+
+  function sendOrder(){
+    
+    if (order.length != 0){
+      postData(urlPost, order)
+      .then((data) => {
+      responseText.value = data; 
+      });
+    }else{
+      responseText.value = "Вы не выбрали ни одной книги";
+    }
+    
+  }
+
+  function checkDiscount(){
+    getData(`http://localhost:8080/api/clients/${card.value}`).then(function(data){
+      responseText.value = "Ваша скидка составляет " + data + " %";
+      
+    });
+    
+  }
+
+
+
 function init(){
-  getData("./books.json").then(function(data){
-    //data.book.forEach(createBookList);
-    console.log(data);
+  getData(urlGet).then(function(data){
+    createBookList(data);
   });
+
+  buttonSendOrder.addEventListener('click', sendOrder);
+  buttonChekDiscount.addEventListener('click', checkDiscount);
+  
 }
 
 init();
-*/
 
-//createBookList();
+

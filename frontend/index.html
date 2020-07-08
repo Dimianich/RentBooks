@@ -8,9 +8,25 @@
     <link rel="stylesheet" href="css/main.css" type="text/css"/>
 </head>
 <body>
-    <ul class="books-list">
-        
-    </ul>
+    <h1 class="main-title">Список книг для аренды:</h1>
+    <div class="control-elements">
+        <label>Номер карты: <input type="text" class="card"></label>
+        <button class="button-chek-discount">Проверить скидку</button>
+      
+    </div>
+
+    <textarea class="response-text" cols="30" rows="3"></textarea>
+    
+    <button class="button-send-order">Отправить заказ</button>
+    <div class="container">
+        <table class="books-list">
+                <tr>
+                    <th>Название книги:</th>
+                    <th>Жанр книги:</th>
+                    <th>Добавить в заказ?</th>
+                </tr>
+        </table>
+    </div>
 
     <script src="js/main.js"></script>
 </body>
