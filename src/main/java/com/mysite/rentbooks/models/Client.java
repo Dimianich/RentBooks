@@ -5,6 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="clients")
 public class Client {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -37,5 +38,14 @@ public class Client {
 
     public void setTotalBuyAmount(Integer totalBuyAmount) {
         this.totalBuyAmount = totalBuyAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", card='" + card + '\'' +
+                ", totalBuyAmount=" + totalBuyAmount +
+                '}';
     }
 }
