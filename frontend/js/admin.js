@@ -109,6 +109,8 @@ function removeBook(event){
   }
 
 function updateData(){
+    booksList.innerHTML = "";
+
     getData(urlGetPost).then(function(data){
         createBookList(data);
       });
