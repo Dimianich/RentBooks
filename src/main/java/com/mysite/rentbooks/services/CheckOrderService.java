@@ -11,9 +11,10 @@ public class CheckOrderService implements ICheckOrderService {
     //Проверка на формирование заказа
     @Override
     public String getOrder(List<Book> order){
-        boolean manyHorrors = isManyHorrors(order);
-        boolean incompatibilityGenres = isIncompatibilityGenres(order);
-        boolean dict = isDictionary(order);
+
+        boolean manyHorrors = isManyGenres(order, "Ужасы", 3);
+        boolean incompatibilityGenres = isIncompatibilityGenres(order, "Книги для детей", "Манга");
+        boolean dict = isNecessaryGenres(order, "На английском языке", "Словари");
 
         if (manyHorrors && incompatibilityGenres && dict){
             return "Ваш заказ успешно принят";
@@ -27,39 +28,36 @@ public class CheckOrderService implements ICheckOrderService {
     }
 
     //Проверка на наличие более трех книг жанра ужасов
-    private boolean isManyHorrors(List<Book> order){
-        int count = 0;
-        String checkGenre = "Ужасы";
+    private boolean isManyGenres(List<Book> order, String genre, int count){
+        int i = 0;
 
         for (Book book : order){
-            if(book.getGenre().equals(checkGenre)){
-                count++;
+            if(book.getGenre().equals(genre)){
+                i++;
             }
         }
 
-        if (count > 3){
+        if (i > count){
             return false;
         }
         return true;
     }
 
     //Проверка на несоместимость жанров детской литературы и манги
-    private boolean isIncompatibilityGenres(List<Book> order){
-        String babyGenre = "Книги для детей";
-        String mangaGenre = "Манга";
-        boolean isBabyGenre = false;
-        boolean isMangaGenre = false;
+    private boolean isIncompatibilityGenres(List<Book> order, String genre1, String genre2){
+        boolean isGenre1 = false;
+        boolean isGenre2 = false;
 
         for (Book book : order){
-            if(book.getGenre().equals(babyGenre)){
-                isBabyGenre = true;
+            if(book.getGenre().equals(genre1)){
+                isGenre1 = true;
             }
-            if(book.getGenre().equals(mangaGenre)){
-                isMangaGenre = true;
+            if(book.getGenre().equals(genre2)){
+                isGenre2 = true;
             }
         }
 
-        if (isBabyGenre && isMangaGenre){
+        if (isGenre1 && isGenre2){
             return false;
         }
 
@@ -67,22 +65,22 @@ public class CheckOrderService implements ICheckOrderService {
     }
 
     //Проверка на совместное присутствие словаря с иностранной литературой
-    private boolean isDictionary(List<Book> order){
+    private boolean isNecessaryGenres(List<Book> order, String baseGenre, String necessaryGenre){
         String dictionaryGenre = "Словари";
         String foreignGenre = "На английском языке";
-        boolean isdictionaryGenre = false;
-        boolean isforeignGenre = false;
+        boolean isNecessaryGenre = false;
+        boolean isBaseGenre = false;
 
         for (Book book : order){
             if(book.getGenre().equals(foreignGenre)){
-                isforeignGenre = true;
+                isBaseGenre = true;
             }
             if(book.getGenre().equals(dictionaryGenre)){
-                isdictionaryGenre = true;
+                isNecessaryGenre = true;
             }
         }
 
-        if (isforeignGenre && !isdictionaryGenre){
+        if (isBaseGenre && !isNecessaryGenre){
             return false;
         }
 
